@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width='device-width', initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Inserir produto</h1>
+    <form action="/inserir" method="post" id="form-produto" onsubmit="inserirProduto()">
+        <div>
+            <div></div><label for="nome">Nome</label>
+            <input type="text" name="nome">
+        </div>
+        
+
+        <div><label for="codigo_de_barras">Codigo de barras</label></div>
+        <input type="text" name="codigo_de_barras"> 
+
+        <div><label for="fabricante">fabricante</label></div>
+        <input type="text" name="fabricante">
+
+        <div><label for="categoria">categoria</label></div>
+        <select name="pre_requisito" id="categoria-select">
+    
+        </select>        
+        
+        <div><label for="tipo">Tipo</label></div>
+        <input type="text" name="tipo">
+        
+        <div><label for="preco_de_venda">Preco de venda</label></div>
+        <input type="number" name="preco_de_venda">
+        
+        <div><label for="quantidade">Quantidade em estoque</label></div>
+        <input type="number" name="quantidade">
+        
+        <div><label for="peso">Peso em gramas</label></div>
+        <input type="number" name="peso">
+        
+        <div><label for="imagem">imagem</label></div>
+        <input type="file" name="file" id="imagem">
+
+        <button type="submit">Enviar</button>
+
+        <div id ="alerta"></div>
+    </form>
+
+<script>
+    function pegarCategoriasEInserir(){
+        const url = "http://localhost/3daw/getCategorias.php";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                const data = JSON.parse(xhttp.responseText);
+                let categoriasopt = "";
+
+                data.map((categoria)=>{
+                    categoriasopt += `<option value=\'${categoria}\'>${categoria}</option>";`
+                });
+                document.getElementById("categoria-select").insertAdjacentHTML( 'beforeend', str );
+            }else{
+                document.getElementById("alerta").innerHTML= `<p>Erro na listagem de categorias.</p>`;
+            }
+        }
+        xhttp.open("GET", url, true);
+        xhttp.send();
+    }
+    window.onload = e => {pegarCategoriasEInserir()};
+
+
+    function validarForm(form){
+        let nome = form.nome.value;
+        let codigo_de_barras = form.codigo_de_barras.value;
+        let fabricante = form.fabricante.value;
+        let categoria = form.categoria.value;
+        let pre_requisito = form.pre_requisito.value;
+        let preco_de_venda = form.preco_de_venda.value;
+        let tipo = form.tipo.value;
+        let peso = form.peso.value;
+        const imagem = document.getElementById("imagem").files[0];
+
+        const alerta = document.getElementById("alerta");
+        let alertahtml= "";
+        if(!nome.length){
+            alertahtml += "<p>Faltando nome</p>"
+        }
+        if(!codigo_de_barras.length){
+            alertahtml += "<p>Faltando codigo de barras</p>"
+        }
+        if(!fabricante.length){
+            alertahtml += "<p>Faltando fabricante</p>"
+        }
+        if(!categoria.length){
+            alertahtml += "<p>Faltando categoria</p>"
+        }
+        if(!pre_requisito.length){
+            alertahtml += "<p>Faltando pre_requisito</p>"
+        }
+        if(!preco_de_venda.length){
+            alertahtml += "<p>Faltando preco_de_venda</p>"
+        }
+        if(!tipo.length){
+            alertahtml += "<p>Faltando tipo</p>"
+        }
+        if(!peso.length){
+            alertahtml += "<p>Faltando peso</p>"
+        }
+        if(!imagem){
+            alertahtml += "<p>Faltando imagem</p>"
+        }
+        alerta.innerHTML = alertahtml;
+
+        return alertahtml.length;
+    }  
+    function enviarProduto(e){
+        e.preventDefault();
+        let produto = document.getElementById("form-produto");
+
+        if(!validarForm(produto)) return;
+        
+        const formData = new FormData();
+
+        const imagem = document.getElementById("imagem").files[0];
+        formData.append("imagem", imagem);
+
+        const{nome, codigo_de_barras, fabricante, categoria, pre_requisito, preco_de_venda, tipo, peso} = produto;
+        formData.append("nome", nome.value);
+        formData.append("fabricante", fabricante.value);
+        formData.append("categoria", categoria.value);
+        formData.append("pre_requisito", pre_requisito.value);
+        formData.append("preco_de_venda", preco_de_venda.value);
+        formData.append("tipo", tipo.value);
+        formData.append("peso", peso.value);
+        formData.append("codigo_de_barras", codigo_de_barras.value);
+
+        const url = "http://localhost/3daw/inserirProdutos.php";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {        
+                document.getElementById("alerta").innerHTML= "<p>Inserido com sucesso.</p>";
+            }else{
+                document.getElementById("alerta").innerHTML= "<p>Erro na insercao</p>";
+            }
+        }
+        xhttp.open("POST", url, true);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send(formData);
+    }
+
+</script>
+</body>
+</html>

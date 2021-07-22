@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Deletar produto</h1>
+    <form action="" method="delete" id="form-produto" onsubmit="deletarProduto(e)">
+        <div><label for="codigo">Codigo de barras</label></div>
+        <input type="text" name="codigo"> 
+
+        <div id ="alerta"></div>
+
+    </form>
+    
+</body>
+<script>
+    function validarForm(form){
+        if(!form.codigo.value){
+            const alerta = document.getElementById("alerta");
+            alerta.innerHTML= "<p>Faltando codigo de barras</p>";
+        }
+    }
+function alterarProduto(e){
+    e.preventDefault();
+
+    let produto = document.getElementById("form-produto");
+
+    if(!validarForm(produto)) return;
+
+    const url = "http://localhost/3daw/deletarProduto.php";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {        
+                document.getElementById("alerta").innerHTML= "<p>Deletado com sucesso.</p>";
+            }else{
+                const data = JSON.parse(xhttp.responseText);
+
+                document.getElementById("alerta").innerHTML= `<p>Erro na delecao: ${data.message}</p>`;
+            }
+        }
+       
+
+        xhttp.open("DELETE", url, true);
+        xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xmlhttp.send(JSON.stringify({ "produto": produto.codigo.value}));     
+}
+</script>
+    
+</html>

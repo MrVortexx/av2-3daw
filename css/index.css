@@ -1,0 +1,8 @@
+header ul{
+    list-style: none;
+    width: 100%;
+    display: flex;
+}
+header ul li {
+    margin-right: 30px;
+}
