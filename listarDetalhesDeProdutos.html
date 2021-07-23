@@ -69,7 +69,7 @@
                             <td>${produto.ativo}</td>
                         </tr>`
                 });
-                document.getElementById("lista-produtos-tabela").insertAdjacentHTML( 'beforeend', str );
+                document.getElementById("lista-produtos-tabela").insertAdjacentHTML( 'beforeend', tableHtml );
             }else{
                 document.getElementById("lista-produtos-tabela").insertAdjacentHTML( 'beforeend', `<span>${xhttp.responseText}</span>` );
             }

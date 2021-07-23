@@ -58,7 +58,7 @@
                 data.map((categoria)=>{
                     categoriasopt += `<option value=\'${categoria}\'>${categoria}</option>";`
                 });
-                document.getElementById("categoria-select").insertAdjacentHTML( 'beforeend', str );
+                document.getElementById("categoria-select").insertAdjacentHTML( 'beforeend', categoriasopt );
             }else{
                 document.getElementById("alerta").innerHTML= `<p>Erro na listagem de categorias.</p>`;
             }
